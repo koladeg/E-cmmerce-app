@@ -1,10 +1,16 @@
 import React from 'react'
-import { Button, Image, StyleSheet, Text, View } from 'react-native'
+import { Button, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors'
 
 const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => {
+    let TouchableCmp = TouchableOpacity;
+
+    if(Platform.OS === 'android' && Platform.Version >= 21) {
+        TouchableCmp = TouchableNativeFeedback;
+    }
     return (
-        <View style={styles.product}>
+        <TouchableCmp style={styles.product} onPress={onViewDetail} useForeground>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{uri: image}} />
             </View>
@@ -16,7 +22,7 @@ const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => {
                 <Button color={Colors.primary} title="View Details" onPress={onViewDetail} />
                 <Button color={Colors.primary} title="To Cart" onPress={onAddToCart} />
             </View>
-        </View>
+        </TouchableCmp>
     )
 }
 
@@ -25,7 +31,7 @@ export default ProductItem
 const styles = StyleSheet.create({
     product: {
         shadowColor: 'black',
-        shadowOpacity: 0.26,
+        shadowOpacity: 0.26, 
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 8,
         elevation: 5,

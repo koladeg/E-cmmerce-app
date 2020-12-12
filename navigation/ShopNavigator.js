@@ -15,7 +15,13 @@ const ShopNavigator = () => {
                     component={ProductsOverviewScreen} 
                     options={{ 
                         headerStyle: {backgroundColor: Platform.OS === 'android' ? Colors.primary: '' }, 
-                        headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary
+                        headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
+                        headerTitleStyle: {
+                            fontFamily: 'open-sans-bold'
+                        },
+                        headerBackTitleStyle: {
+                            fontFamily: 'open-sans'
+                        }
                     }}/>
                 <ProductNavigator.Screen name="ProductDetail" component={ProductDetailScreen} options={detailScreenOptions}/>
             </ProductNavigator.Navigator>

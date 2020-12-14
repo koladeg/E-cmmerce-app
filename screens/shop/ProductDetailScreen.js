@@ -3,10 +3,10 @@ import { Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 
 import Colors from '../../constants/Colors';
-import * as cartActions from '../../store/actions';
+import * as cartActions from '../../store/actions/cart'
 
 const ProductDetailScreen = ({ navigation, route }) => {
-    const { productId } = routex .params;
+    const { productId } = route.params;
 
     const selectedProduct = useSelector(
         state => state.products.availableProducts.find( prod => prod.id === productId))

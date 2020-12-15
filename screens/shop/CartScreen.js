@@ -60,6 +60,12 @@ const CartScreen = () => {
 
 export default CartScreen
 
+export const cartScreenOptions = ({ navigation }) => {
+    return { 
+        title: 'Your Cart',
+    }
+}
+
 const styles = StyleSheet.create({
     screen: {
         margin: 20

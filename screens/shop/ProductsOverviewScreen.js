@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { Platform } from 'react-native';
 
@@ -38,16 +38,9 @@ export default ProductsOverviewScreen
 export const productScreenOptions = ({ navigation }) => {
     return { 
         title: 'All Products',
-        headerStyle: {backgroundColor: Platform.OS === 'android' ? Colors.primary: '' }, 
-        headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary,
-        headerTitleStyle: {
-            fontFamily: 'open-sans-bold'
-        },
-        headerBackTitleStyle: {
-            fontFamily: 'open-sans'
-        },
-        headerRight: () => (<HeaderButton title name={Platform === 'android' ? "md-cart" : "ios-cart"} onPress={ () => { navigation.navigate('Cart')}}/>),
+        headerLeft: () => (<HeaderButton title= 'menu' name={Platform === 'android' ? "md-menu" : "ios-menu"} onPress={ () => { navigation.toggleDrawer()}}/>),
+        headerRight: () => (<HeaderButton title= 'cart' name={Platform === 'android' ? "md-cart" : "ios-cart"} onPress={ () => { navigation.navigate('Cart')}}/>),
     }
 }
 
-const styles = StyleSheet.create({})
+

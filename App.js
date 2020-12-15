@@ -18,7 +18,7 @@ import ordersReducer from './store/reducers/orders'
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
-  order: ordersReducer
+  orders: ordersReducer
 });
 
 const store = createStore(rootReducer)

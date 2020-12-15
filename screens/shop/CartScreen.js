@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CartItem from '../../components/shop/CartItem'
 import Colors from '../../constants/Colors'
 import * as cartActions from '../../store/actions/cart';
+import * as ordersActions from '../../store/actions/orders';
 
 const CartScreen = () => {
     const cartTotalAmount = useSelector(state => state.cart.totalAmount)
@@ -28,7 +29,14 @@ const CartScreen = () => {
                 <Text style={styles.summaryText}>
                     Total: <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
                 </Text>
-                <Button color={Colors.accent} title= "Order Now" disabled= {cartItems.length == 0}/>
+                <Button 
+                    color={Colors.accent} 
+                    title= "Order Now" 
+                    disabled={cartItems.length == 0} 
+                    onPress={() => {
+                        dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+                    }}
+                />
             </View>
             <View>
                 <FlatList 

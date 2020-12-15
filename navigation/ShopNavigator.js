@@ -22,4 +22,6 @@ const ShopNavigator = ({ navigation }) => {
     )
 }
 
+const shopDrawerNavigator = createNative
+
 export default ShopNavigator

@@ -13,10 +13,12 @@ enableScreens();
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart'
 import ShopNavigator from './navigation/ShopNavigator';
+import ordersReducer from './store/reducers/orders'
 
 const rootReducer = combineReducers({
   products: productsReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  order: ordersReducer
 });
 
 const store = createStore(rootReducer)

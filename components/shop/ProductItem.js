@@ -3,14 +3,14 @@ import { Button, Image, Platform, StyleSheet, Text, TouchableOpacity, View } fro
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors'
 
-const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => {
+const ProductItem = ({image, title, price, onSelect, onAddToCart}) => {
     let TouchableCmp = TouchableOpacity;
 
     if(Platform.OS === 'android' && Platform.Version >= 21) {
         TouchableCmp = TouchableNativeFeedback;
     }
     return (
-        <TouchableCmp style={styles.product} onPress={onViewDetail} useForeground>
+        <TouchableCmp style={styles.product} onPress={onSelect} useForeground>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{uri: image}} />
             </View>
@@ -19,7 +19,7 @@ const ProductItem = ({image, title, price, onViewDetail, onAddToCart}) => {
                 <Text style={styles.price}>${price.toFixed(2)}</Text>
             </View>
             <View style={styles.actions}>
-                <Button color={Colors.primary} title="View Details" onPress={onViewDetail} />
+                <Button color={Colors.primary} title="View Details" onPress={onSelect} />
                 <Button color={Colors.primary} title="To Cart" onPress={onAddToCart} />
             </View>
         </TouchableCmp>

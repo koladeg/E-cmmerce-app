@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, FlatList, Platform } from 'react-native'
+import { FlatList, Platform } from 'react-native'
 import { DrawerActions } from "@react-navigation/native";
 
 import { useSelector } from 'react-redux'
@@ -7,6 +7,7 @@ import HeaderButton from '../../components/UI/HeaderButton'
 import OrderItem from '../../components/shop/OrderItem';
 
 const OrdersScreen = () => {
+    
     const orders = useSelector(state => state.orders.orders)
     return (
         <FlatList 
@@ -16,10 +17,13 @@ const OrdersScreen = () => {
                 <OrderItem 
                     amount= {itemData.item.totalAmount} 
                     date={itemData.item.readableDate}
+                    items={itemData.item.items}
                 />} 
          />
     )
 }
+
+
 export default OrdersScreen
 
 export const ordersScreenOptions = ({ navigation }) => {

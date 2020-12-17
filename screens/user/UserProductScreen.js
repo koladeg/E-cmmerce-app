@@ -1,11 +1,18 @@
 import React from 'react'
-import { FlatList, Platform, StyleSheet} from 'react-native'
-import { useSelector } from 'react-redux'
+import { Button, FlatList, Platform, StyleSheet} from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import ProductItem from '../../components/shop/ProductItem'
 import HeaderButton from '../../components/UI/HeaderButton'
+import Colors from '../../constants/Colors'
+import * as productsActions from '../../store/actions/products'
 
-const UserProductScreen = () => {
+const UserProductScreen = ({ navigation }) => {
     const userProduct = useSelector(state => state.products.userProducts)
+    const dispatch = useDispatch(); 
+
+    const editProductHandler = (id) => {
+        navigation.navigate('EditProduct', { productId: id });
+    }
 
     return (
         <FlatList 
@@ -16,9 +23,24 @@ const UserProductScreen = () => {
                     image={itemData.item.imageUrl} 
                     title={itemData.item.title} 
                     price={itemData.item.price}
-                    onViewDetail={() => {}}
-                    onAddToCart={() => {}}
-                /> 
+                    onSelect={() => {
+                        editProductHandler(itemData.item.id);
+                    }}
+                >
+                    <Button 
+                            color={Colors.primary} 
+                            title="Edit" 
+                            onPress={() => {
+                                editProductHandler(itemData.item.id);
+                        }   } />
+                        <Button 
+                            color={Colors.primary} 
+                            title="Delete" 
+                            onPress={() => {
+                                dispatch(productsActions.deleteProduct(itemData.item.id));
+                            }} 
+                        />
+                </ProductItem> 
             )}
          />
     )
@@ -35,6 +57,12 @@ export const userProductScreenOptions = ({ navigation }) => {
             name={Platform === 'android' ? "md-menu" : "ios-menu"} 
             onPress={ () => { navigation.toggleDrawer()}}
         />),
+        headerRight: () => (
+            <HeaderButton 
+                title= 'Add' 
+                name={Platform === 'android' ? "md-create" : "ios-create"} 
+                onPress={ () => { navigation.navigate('EditProduct',{ productId:false })}}
+            />),
     }
 }
 

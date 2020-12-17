@@ -10,6 +10,7 @@ import ProductsOverviewScreen, { productScreenOptions } from '../screens/shop/Pr
 import CartScreen, { cartScreenOptions } from '../screens/shop/CartScreen';
 import OrdersScreen, { ordersScreenOptions } from '../screens/shop/OrdersScreen';
 import UserProductScreen, { userProductScreenOptions } from '../screens/user/UserProductScreen';
+import EditProductScreen, { editProductScreenOptions } from '../screens/user/EditProductScreen';
 
 const defaultNavOptions = {
     headerStyle: {backgroundColor: Platform.OS === 'android' ? Colors.primary: '' }, 
@@ -46,9 +47,10 @@ const AdminStackNavigator = createNativeStackNavigator();
 
 export const AdminNavigator = () => {
     return (
-        <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions} >
-          <OrdersStackNavigator.Screen name="UserProduct" component={UserProductScreen} options={userProductScreenOptions} />
-        </OrdersStackNavigator.Navigator>
+        <AdminStackNavigator.Navigator screenOptions={defaultNavOptions} >
+          <AdminStackNavigator.Screen name="UserProduct" component={UserProductScreen} options={userProductScreenOptions} />
+          <AdminStackNavigator.Screen name="EditProduct" component={EditProductScreen} options={editProductScreenOptions}/>
+        </AdminStackNavigator.Navigator>
       );
 }
 

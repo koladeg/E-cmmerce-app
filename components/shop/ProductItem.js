@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
-import Colors from '../../constants/Colors'
 
-const ProductItem = ({image, title, price, onSelect, onAddToCart}) => {
+
+const ProductItem = ({image, title, price, onSelect, children}) => {
     let TouchableCmp = TouchableOpacity;
 
     if(Platform.OS === 'android' && Platform.Version >= 21) {
@@ -19,8 +19,7 @@ const ProductItem = ({image, title, price, onSelect, onAddToCart}) => {
                 <Text style={styles.price}>${price.toFixed(2)}</Text>
             </View>
             <View style={styles.actions}>
-                <Button color={Colors.primary} title="View Details" onPress={onSelect} />
-                <Button color={Colors.primary} title="To Cart" onPress={onAddToCart} />
+                {children}
             </View>
         </TouchableCmp>
     )
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     },
     details: {
         alignItems: 'center',
-        height: '15%',
+        height: '17%',
         padding: 10      
     },
     title: {
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '25%',
+        height: '23%',
         paddingHorizontal: 20
     },
 })

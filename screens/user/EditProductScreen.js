@@ -1,47 +1,69 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import HeaderButton from '../../components/UI/HeaderButton'
+import * as productsActions from '../../store/actions/products'
 
-const EditProductScreen = ({ route }) => {
+const EditProductScreen = ({ route, navigation }) => {
 
-    const prodId = route.params.productId
+    const prodId = route.params ? route.params.productId: null;
 
     const editedProduct = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId))
+
+    const dispatch = useDispatch()
 
     const [title, setTitle] = useState(editedProduct ? editedProduct.title : '')
     const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl : '')
     const [price, setPrice] = useState('')
     const [description, setDescription] = useState(editedProduct ? editedProduct.description : '')
 
+    const submitHandler =  useCallback(
+        () => {
+            if(editedProduct) {
+                dispatch(
+                    productsActions.updateProduct(prodId, title, description, imageUrl))
+            } else {
+                dispatch(
+                    productsActions.createProduct(title, description, imageUrl, +price)
+                )
+            }
+        },
+        [dispatch, prodId, title, description, imageUrl, price],
+    )
+
+    useEffect(() => {
+        navigation.setParams({ submit: submitHandler })
+    }, [submitHandler])
+
     return (
         <ScrollView style={styles.form}>
             <View style={styles.formControl}>
                  <Text style={styles.label}>Title</Text>
-                 <TextInput style={styles.input} value={title} onChange={text => setTitle(text)}/>
+                 <TextInput style={styles.input} value={title} onChangeText={text => setTitle(text)}/>
              </View>
              <View style={styles.formControl}>
                  <Text style={styles.label}>Image URL</Text>
-                 <TextInput style={styles.input} value={imageUrl} onChange={text => setImageUrl(text)}/>
+                 <TextInput style={styles.input} value={imageUrl} onChangeText={text => setImageUrl(text)}/>
              </View>
              { editedProduct ? null : ( 
                  <View style={styles.formControl}>
                     <Text style={styles.label}>Price</Text>
-                    <TextInput style={styles.input} value={price} onChange={text => setPrice(text)}/>
+                    <TextInput style={styles.input} value={price} onChangeText={text => setPrice(text)}/>
                 </View>
              )}
              <View style={styles.formControl}>
                  <Text style={styles.label}>Description</Text>
-                 <TextInput style={styles.input} value={description} onChange={text => setDescription(text)}/>
+                 <TextInput style={styles.input} value={description} onChangeText={text => setDescription(text)}/>
              </View>
         </ScrollView>
     )
 }
 
 export const editProductScreenOptions = ({ route }) => {
-    const { productId } = route.params;
+    const submitFn = route.params ? route.params.submit : null;
+    const routeParams = route.params ? route.params : {};
     return { 
-        title: productId ? 'Edit Product' : 'Add Product',
+        title: routeParams.productId ? 'Edit Product' : 'Add Product',
         // headerLeft: () => (
         // <HeaderButton 
         //     title= 'cart' 
@@ -52,7 +74,7 @@ export const editProductScreenOptions = ({ route }) => {
             <HeaderButton 
                 title= 'Save' 
                 name={Platform === 'android' ? "md-checkmark" : "ios-checkmark"} 
-                onPress={ () => { }}
+                onPress={submitFn}
             />),
     }
 }

@@ -61,7 +61,7 @@ export const userProductScreenOptions = ({ navigation }) => {
             <HeaderButton 
                 title= 'Add' 
                 name={Platform === 'android' ? "md-create" : "ios-create"} 
-                onPress={ () => { navigation.navigate('EditProduct',{ productId:false })}}
+                onPress={ () => { navigation.navigate('EditProduct')}}
             />),
     }
 }

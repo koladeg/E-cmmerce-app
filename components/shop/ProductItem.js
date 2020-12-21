@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import Card from '../UI/Card';
 
 
 const ProductItem = ({image, title, price, onSelect, children}) => {
@@ -10,18 +11,21 @@ const ProductItem = ({image, title, price, onSelect, children}) => {
         TouchableCmp = TouchableNativeFeedback;
     }
     return (
-        <TouchableCmp style={styles.product} onPress={onSelect} useForeground>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{uri: image}} />
-            </View>
-            <View style={styles.details}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.price}>${price.toFixed(2)}</Text>
-            </View>
-            <View style={styles.actions}>
-                {children}
-            </View>
-        </TouchableCmp>
+        <Card style={styles.product}>
+            <TouchableCmp  onPress={onSelect} useForeground>
+                <View style={styles.imageContainer}>
+                    <Image style={styles.image} source={{uri: image}} />
+                </View>
+                <View style={styles.details}>
+                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.price}>${price.toFixed(2)}</Text>
+                </View>
+                <View style={styles.actions}>
+                    {children}
+                </View>
+         </TouchableCmp>
+        </Card>
+        
     )
 }
 
@@ -29,13 +33,6 @@ export default ProductItem
 
 const styles = StyleSheet.create({
     product: {
-        shadowColor: 'black',
-        shadowOpacity: 0.26, 
-        shadowOffset: {width: 0, height: 2},
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white',
         height: 300,
         margin: 20
     },

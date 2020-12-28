@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { enableScreens } from "react-native-screens";
 import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
+import ReduxThunk from "redux-thunk";
 
 
 enableScreens();
@@ -21,7 +22,7 @@ const rootReducer = combineReducers({
   orders: ordersReducer
 });
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
 
 const fetchFonts = () => {
   return Font.loadAsync({

@@ -51,7 +51,7 @@ const Input = props => {
         }
         if (props.min != null && +text < props.min) {
         isValid = false;
-        }rr
+        }
         if (props.max != null && +text > props.max) {
         isValid = false;
         }

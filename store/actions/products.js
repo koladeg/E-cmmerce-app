@@ -35,7 +35,7 @@ export const fetchProducts = () => {
                 type: SET_PRODUCTS,
                 products: loadedProducts
             })
-        } catch(error) {
+        } catch(err) {
             // send to custom analytics server
             throw err;
         }

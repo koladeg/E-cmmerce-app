@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useReducer  } from 'react'
-import { Platform, ScrollView, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native'
+import React, { useCallback, useEffect, useReducer, useState  } from 'react'
+import { Platform, ScrollView, StyleSheet, Alert, KeyboardAvoidingView, ActivityIndicator, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import HeaderButton from '../../components/UI/HeaderButton'
 import Input from '../../components/UI/Input'
+import Colors from '../../constants/Colors'
 import * as productsActions from '../../store/actions/products'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -32,6 +33,9 @@ const formReducer = (state, action) => {
 
 const EditProductScreen = ({ route, navigation }) => {
 
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState()
+
     const prodId = route.params ? route.params.productId: null;
 
     const editedProduct = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId))
@@ -52,37 +56,53 @@ const EditProductScreen = ({ route, navigation }) => {
                 title: editedProduct ? true : false,
             }, 
             formIsValid: editedProduct ? true : false,
-        }
-        )
+        });
+
+        useEffect(() => {
+            if(error){
+                Alert.alert('An error occurred!', error, [{ text: 'Okay'}])
+            }
+            return () => {
+                cleanup
+            }
+        }, [error])
 
     
-    const submitHandler =  useCallback(
-        
-        () => {
+    const submitHandler =  useCallback(   
+        async () => {
             if(!formState.formIsValid){
                 Alert.alert('Wrong input!', 'Please check the errors in the form.', [
                     { text: 'Okay'}
             ])
                 return;
             }
-            if(editedProduct) {
-                dispatch(
-                    productsActions.updateProduct(
-                            prodId, 
+            setError(null)
+            setIsLoading(true)
+            try{
+                if(editedProduct) {
+                    await dispatch(
+                        productsActions.updateProduct(
+                                prodId, 
+                                formState.inputValues.title, 
+                                formState.inputValues.description, 
+                                formState.inputValues.imageUrl
+                            ))
+                } else {
+                    await dispatch(
+                        productsActions.createProduct(
                             formState.inputValues.title, 
                             formState.inputValues.description, 
-                            formState.inputValues.imageUrl
-                        ))
-            } else {
-                dispatch(
-                    productsActions.createProduct(
-                        formState.inputValues.title, 
-                        formState.inputValues.description, 
-                        formState.inputValues.imageUrl, 
-                        +formState.inputValues.price)
-                )
+                            formState.inputValues.imageUrl, 
+                            +formState.inputValues.price)
+                    )
+                }
+                navigation.goBack()
+            } catch (err) {
+                setError(err.message)
             }
-            navigation.goBack()
+            
+            setIsLoading(false);
+            
         },
         [dispatch, prodId, formState],
     )
@@ -99,6 +119,14 @@ const EditProductScreen = ({ route, navigation }) => {
             input: inputIdentifier,
         })
     }, [dispatchFormState])
+
+    if(isLoading){
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size='large' color= {Colors.primary}/>
+            </View>
+        )
+    }
 
     return (
         <KeyboardAvoidingView behaviour="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
@@ -184,5 +212,10 @@ const styles = StyleSheet.create({
     form: {
         margin: 20,
     },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
     
 })

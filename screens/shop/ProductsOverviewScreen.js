@@ -13,20 +13,21 @@ import * as productActions from '../../store/actions/products'
 const ProductsOverviewScreen = ({ navigation }) => {
     const [error, setError] = useState()
     const [isLoading, setIsLoading] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
 
     const loadProducts = useCallback (async () => {
         console.log('LOAD PRODUCTS');
         setError(null)
-        setIsLoading(true)
+        setIsRefreshing(true)
         try {
             await dispatch(productActions.fetchProducts())
         } catch (err) {
             setError(err.message);
         }
         
-        setIsLoading(false);
+        setIsRefreshing(false);
     }, [dispatch, setError, setIsLoading])
 
     useEffect(() => {
@@ -40,7 +41,10 @@ const ProductsOverviewScreen = ({ navigation }) => {
     }, [loadProducts])
 
     useEffect(() => {
-        loadProducts()
+        setIsLoading(true)
+        loadProducts().then(() => {
+            setIsLoading(false)
+        })
     }, [dispatch, loadProducts])
 
     const selectItemHandler = (id, title) => {
@@ -76,7 +80,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
     }
 
     return (
-            <FlatList  data={products} keyExtractor={item => item.id} 
+            <FlatList onRefresh={loadProducts} refreshing={isRefreshing} data={products} keyExtractor={item => item.id} 
                 renderItem={
                     itemData => <ProductItem 
                         image={itemData.item.imageUrl} 

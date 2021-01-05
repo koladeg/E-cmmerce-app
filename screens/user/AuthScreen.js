@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react'
+import React, { useCallback, useReducer, useState } from 'react'
 import { StyleSheet, Text, ScrollView, View, KeyboardAvoidingView, Button  } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
@@ -35,6 +35,7 @@ const formReducer = (state, action) => {
 }
 
 const AuthScreen = props => {
+    const [isSignup, setIsSignup] = useState(false)
     const dispatch = useDispatch();
 
     const [formState, dispatchFormState] =  useReducer(formReducer, {
@@ -49,8 +50,14 @@ const AuthScreen = props => {
         formIsValid: false,
     });
 
-    const signupHandler = () => {
-        dispatch(authActions.signup( formState.initialValues.email, formState.initialValues.password))
+    const authHandler = () => {
+        let action;
+        if(isSignup) {
+            action = authActions.signup( formState.inputValues.email, formState.inputValues.password )
+        } else {
+            action = authActions.login( formState.inputValues.email, formState.inputValues.password)
+        }
+        dispatch(action)   
     };
 
     const inputChangeHandler = useCallback (( inputIdentifier, inputValue, inputValidity ) => {
@@ -62,25 +69,25 @@ const AuthScreen = props => {
         })
     }, [dispatchFormState])
     return (
-        <KeyboardAvoidingView behaviour="padding" KeyboardVerticalOffset={50} style={styles.screen}>
-            <LinearGradient colors={['#ffedff', 'ffe3ff']} style={styles.gradient}>
+        <KeyboardAvoidingView behavior="padding" KeyboardVerticalOffset={50} style={styles.screen}>
+            <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
                 <Card style={styles.authContainer}>
                     <ScrollView>
                         <Input 
                             id='email' 
                             label="E-mail" 
-                            keyboardTpye='email-address' 
+                            keyboardType='email-address' 
                             required 
                             email 
                             autoCapitalize="none" 
                             errorText="Please enter a valid email address."
-                            onValueChange={inputChangeHandler}
+                            onInputChange={inputChangeHandler}
                             initialValue=''
                         />
                         <Input 
                             id='password' 
                             label="Password" 
-                            keyboardTpye='default' 
+                            keyboardType='default' 
                             secureTextEntry
                             required 
                             minLength={5} 
@@ -90,10 +97,16 @@ const AuthScreen = props => {
                             initialValue=''
                         />
                         <View style={styles.buttonContainer}>
-                            <Button title="login" color={Colors.primary} onPress={(signupHandler} />
+                            <Button title={isSignup? "Sign Up" : "login"} color={Colors.primary} onPress={authHandler} />
                         </View>
                         <View style={styles.buttonContainer}>
-                            <Button title="Switch to Sign Up" color={Colors.accent} onPress={() => {}} />
+                            <Button 
+                                title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`} 
+                                color={Colors.accent} 
+                                onPress={() => {
+                                    setIsSignup(prevState => !prevState)
+                                }} 
+                            />
                         </View>
                     </ScrollView>
                 </Card>
@@ -124,10 +137,8 @@ const styles = StyleSheet.create({
     }
 })
 
-export const authScreenOptions = ({ navigation }) => {
+export const authScreenOptions = () => {
     return { 
         title: 'Authenticate',
-        // headerLeft: () => (<HeaderButton title= 'menu' name={Platform === 'android' ? "md-menu" : "ios-menu"} onPress={ () => { navigation.toggleDrawer()}}/>),
-        // headerRight: () => (<HeaderButton title= 'cart' name={Platform === 'android' ? "md-cart" : "ios-cart"} onPress={ () => { navigation.navigate('Cart')}}/>),
     }
 }

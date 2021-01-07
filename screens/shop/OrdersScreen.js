@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, FlatList, Platform, ActivityIndicator, StyleSheet } from 'react-native'
+import { View, Text, FlatList, Platform, ActivityIndicator, StyleSheet } from 'react-native'
 import { DrawerActions } from "@react-navigation/native";
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,6 +25,14 @@ const OrdersScreen = () => {
         return(
             <View style={styles.centered}>
                 <ActivityIndicator size= 'large' color= {Colors.primary} />
+            </View>
+        )
+    }
+
+    if (orders.length === 0) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text>No orders found. Try creating some new orders</Text>
             </View>
         )
     }

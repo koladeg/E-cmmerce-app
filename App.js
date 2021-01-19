@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { enableScreens } from "react-native-screens";
-import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import ReduxThunk from "redux-thunk";
@@ -13,9 +12,9 @@ enableScreens();
 
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart'
-import ShopNavigator from './navigation/ShopNavigator';
 import authReducer from './store/reducers/auth';
 import ordersReducer from './store/reducers/orders'
+import AppNavigator from './navigation/AppNavigator';
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -43,10 +42,8 @@ if (!fontLoaded) {
   }} onError={console.warn} />
 }
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <ShopNavigator />
-      </NavigationContainer>
+    <Provider store={store}>     
+        <AppNavigator />
       <StatusBar style="auto" />
     </Provider>
   );

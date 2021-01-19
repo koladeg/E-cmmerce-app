@@ -17,35 +17,26 @@ const ProductsOverviewScreen = ({ navigation }) => {
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
 
-    const loadProducts = useCallback (async () => {
-        console.log('LOAD PRODUCTS');
+    const loadProducts = useCallback(async () => {
         setError(null)
         setIsRefreshing(true)
         try {
-            await dispatch(productActions.fetchProducts())
+          await dispatch(productActions.fetchProducts());
         } catch (err) {
-            setError(err.message);
+          setError(err.message)
         }
-        
-        setIsRefreshing(false);
-    }, [dispatch, setError, setIsLoading])
-
-    useEffect(() => {
-        const willFocusSub = navigation.addListener('focus',() => {
-            loadProducts()
-          }) 
+        setIsRefreshing(false)
+      }, [dispatch, setIsRefreshing, setError]);
+      useEffect(() => {
+        setIsLoading(true);
+        loadProducts().then(() => setIsLoading(false));
+      }, [dispatch, loadProducts]);
+      useEffect(() => {
+        const unsubscribe  = navigation.addListener('Focus', loadProducts)
         return () => {
-            willFocusSub
-        };
-
-    }, [loadProducts])
-
-    useEffect(() => {
-        setIsLoading(true)
-        loadProducts().then(() => {
-            setIsLoading(false)
-        })
-    }, [dispatch, loadProducts])
+          unsubscribe()
+        }
+      }, [loadProducts])
 
     const selectItemHandler = (id, title) => {
         navigation.navigate('ProductDetail', {
@@ -82,7 +73,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
     return (
             <FlatList onRefresh={loadProducts} refreshing={isRefreshing} data={products} keyExtractor={item => item.id} 
                 renderItem={
-                    itemData => <ProductItem 
+                    itemData => (<ProductItem 
                         image={itemData.item.imageUrl} 
                         title={itemData.item.title}
                         price={itemData.item.price}
@@ -102,7 +93,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
                             onPress={() => {dispatch(cartActions.addToCart(itemData.item))}} 
                         />
                     </ProductItem>
-                    } />
+                    )} />
     )
 }
 

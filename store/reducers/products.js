@@ -1,4 +1,3 @@
-import PRODUCTS from "../../data/seed-data";
 import Product from "../../models/product";
 import { CREATE_PRODUCT, DELETE_PRODUCT, SET_PRODUCTS, UPDATE_PRODUCT } from "../actions/products";
 
@@ -40,7 +39,8 @@ export default (state = initialState, action) => {
             );
             const updatedUserProducts = [...state.userProducts];
             updatedUserProducts[productIndex] = updatedProduct;
-            const availableProductIndex = state.availableProducts.findIndex(prod =>  prod.id === action.pid);
+
+            const availableProductIndex = state.userProducts.findIndex(prod =>  prod.id === action.pid);
             const updatedAvailableProducts = [...state.availableProducts];
             updatedAvailableProducts[availableProductIndex] = updatedProduct;
             return {

@@ -34,10 +34,11 @@ const formReducer = (state, action) => {
     return state;
 }
 
-const AuthScreen = props => {
+const AuthScreen = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState()
     const [isSignup, setIsSignup] = useState(false)
+
     const dispatch = useDispatch();
 
     const [formState, dispatchFormState] =  useReducer(formReducer, {
@@ -56,9 +57,6 @@ const AuthScreen = props => {
         if(error){
             Alert.alert('An Error Occurred!', error, [{ text: 'Okay'}])
         }
-        return () => {
-            cleanup
-        }
     }, [error])
 
     const authHandler = async () => {
@@ -72,7 +70,7 @@ const AuthScreen = props => {
         setIsLoading(true);
         try {
             await dispatch(action);
-            props.navigation.navigate('Shop')
+            // props.navigation.navigate('Shop')
         } catch (error) {
             setError(error.message)
             setIsLoading(false);
@@ -87,6 +85,7 @@ const AuthScreen = props => {
             input: inputIdentifier,
         })
     }, [dispatchFormState])
+    
     return (
         <KeyboardAvoidingView behavior="padding" KeyboardVerticalOffset={50} style={styles.screen}>
             <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
@@ -120,7 +119,8 @@ const AuthScreen = props => {
                                 <ActivityIndicator size='small' color={Colors.primary} /> ):(
                                 <Button 
                                 title={isSignup? "Sign Up" : "login"} 
-                                color={Colors.primary} onPress={authHandler} 
+                                color={Colors.primary} 
+                                onPress={authHandler} 
                                />
                             )}
                         </View>

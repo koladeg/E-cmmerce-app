@@ -1,8 +1,9 @@
 import React from 'react'
-import { Platform } from 'react-native';
+import { Button, Platform, SafeAreaView, View } from 'react-native';
 import { createNativeStackNavigator} from "react-native-screens/native-stack";
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
 import Colors from '../constants/Colors';
 import ProductDetailScreen, { detailScreenOptions } from '../screens/shop/ProductDetailScreen';
@@ -12,6 +13,7 @@ import OrdersScreen, { ordersScreenOptions } from '../screens/shop/OrdersScreen'
 import UserProductScreen, { userProductScreenOptions } from '../screens/user/UserProductScreen';
 import EditProductScreen, { editProductScreenOptions } from '../screens/user/EditProductScreen';
 import AuthScreen, { authScreenOptions } from '../screens/user/AuthScreen';
+import * as authActions from '../store//actions/auth';
 
 const defaultNavOptions = {
     headerStyle: {backgroundColor: Platform.OS === 'android' ? Colors.primary: '' }, 
@@ -55,39 +57,36 @@ export const AdminNavigator = () => {
       );
 }
 
-const AuthStackNavigator = createNativeStackNavigator();
 
-export const AuthNavigator = () => {
-    return (
-        <AuthStackNavigator.Navigator screenOptions={defaultNavOptions} >
-          <AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={authScreenOptions} />
-        </AuthStackNavigator.Navigator>
-      );
-}
 
 const ShopDrawerNavigator = createDrawerNavigator();
 
-const ShopNavigator = () => {
+export const ShopNavigator = () => {
+    const dispatch = useDispatch();
+
     return (
       <ShopDrawerNavigator.Navigator 
-        // drawerContent={} 
+        drawerContent={ props => {
+            return (
+                <View style={{flex: 1, paddingTop: 20 }}>
+                    <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+                        <DrawerItemList {...props} />
+                        <Button 
+                            title= "Logout"
+                            color={Colors.primary}
+                            onPress={() => {
+                                dispatch(authActions.logout())
+                            }}
+                        />
+                    </SafeAreaView>
+                </View>
+            )}
+        } 
         drawerContentOptions={{
             activeTintColor: Colors.primary
         }}
       >
-      <ShopDrawerNavigator.Screen 
-            name="auth" 
-            component={AuthNavigator} 
-            options={{
-                drawerIcon: props => (
-                    <Ionicons
-                        name={Platform.OS === 'android' ? 'md-list' : 'ios-list'}
-                        size={23}
-                        color={props.color}
-                    />
-                )
-            }}
-        />
+      
         <ShopDrawerNavigator.Screen 
             name="Products" 
             component={ProductsNavigator}
@@ -131,6 +130,16 @@ const ShopNavigator = () => {
     );
   }
 
+const AuthStackNavigator = createNativeStackNavigator();
+
+export const AuthNavigator = () => {
+    return (
+        <AuthStackNavigator.Navigator screenOptions={defaultNavOptions} >
+          <AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={authScreenOptions} />
+        </AuthStackNavigator.Navigator>
+      );
+}
+
   
 
-export default ShopNavigator;
+// export default ShopNavigator;

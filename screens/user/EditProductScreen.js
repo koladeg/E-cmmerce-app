@@ -62,9 +62,6 @@ const EditProductScreen = ({ route, navigation }) => {
             if(error){
                 Alert.alert('An error occurred!', error, [{ text: 'Okay'}])
             }
-            return () => {
-                cleanup
-            }
         }, [error])
 
     
@@ -108,7 +105,14 @@ const EditProductScreen = ({ route, navigation }) => {
     )
 
     useEffect(() => {
-        navigation.setParams({ submit: submitHandler })
+        navigation.setOptions({ 
+            headerRight: () => (
+                <HeaderButton 
+                    title= 'Save' 
+                    name={Platform === 'android' ? "md-checkmark" : "ios-checkmark"} 
+                    onPress={submitHandler}
+                />),
+         })
     }, [submitHandler])
 
     const inputChangeHandler = useCallback (( inputIdentifier, inputValue, inputValidity ) => {
@@ -187,7 +191,6 @@ const EditProductScreen = ({ route, navigation }) => {
 }
 
 export const editProductScreenOptions = ({ route }) => {
-    const submitFn = route.params ? route.params.submit : null;
     const routeParams = route.params ? route.params : {};
     return { 
         title: routeParams.productId ? 'Edit Product' : 'Add Product',
@@ -197,12 +200,7 @@ export const editProductScreenOptions = ({ route }) => {
         //     name={Platform === 'android' ? "md-menu" : "ios-menu"} 
         //     onPress={ () => { navigation.toggleDrawer()}}
         // />),
-        headerRight: () => (
-            <HeaderButton 
-                title= 'Save' 
-                name={Platform === 'android' ? "md-checkmark" : "ios-checkmark"} 
-                onPress={submitFn}
-            />),
+        
     }
 }
 

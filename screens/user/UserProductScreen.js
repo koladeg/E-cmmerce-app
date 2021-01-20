@@ -7,57 +7,29 @@ import Colors from '../../constants/Colors'
 import * as productsActions from '../../store/actions/products'
 
 const UserProductScreen = ({ navigation }) => {
-    const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const userProducts = useSelector((state) => state.products.userProducts);
-  const dispatch = useDispatch();
-  const deleteDispatchHandler = async (id) => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      await dispatch(productsAction.deleteProduct(id));
-    } catch (error) {
-      setError(error.message);
+    const userProduct = useSelector(state => state.products.userProducts)
+    const dispatch = useDispatch(); 
+
+    const editProductHandler = (id) => {
+        navigation.navigate('EditProduct', { productId: id });
     }
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    if (error) {
-      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+
+    const deleteHandler = (id) => {
+        Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
+            {text: 'No', style: 'default'},
+            {text: 'Yes', style: 'destructive', onPress: () => {
+                dispatch(productsActions.deleteProduct(id));
+            }}
+        ])
+    };
+
+    if (userProduct.length === 0) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text>No products found. Try creating some</Text>
+            </View>
+        )
     }
-  }, [error]);
-  const deleteHandler = (id) => {
-    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
-      {
-        text: "No",
-        style: "default",
-      },
-      {
-        text: "Yes",
-        style: "destructive",
-        onPress: () => deleteDispatchHandler(id),
-      },
-    ]);
-  };
-  const editProductHandler = (id) => {
-    props.navigation.navigate("EditProduct", {
-      productId: id,
-    });
-  };
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
-  if (userProducts.length === 0) {
-    return (
-      <View style={styles.centered}>
-        <Text style={{fontFamily:'openSans'}} >No prodcuts found, maybe start creating some?</Text>
-      </View>
-    )
-  }
 
     return (
         <FlatList 
